@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concert Booking</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #1a1a2e, #16213e);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .form-container, .payment-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
+            width: 300px;
+            margin: auto;
+            display: none;
+        }
+        .btn {
+            background: #ffcc00;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #ffaa00;
+        }
+        .concert-list {
+            list-style: none;
+            padding: 0;
+        }
+        .concert-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .seat-container {
+            display: grid;
+            grid-template-columns: repeat(6, 50px);
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .seat {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 50px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .seat.selected {
+            background: rgba(0, 255, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+<div id="concertsContainer" class="container">
+    <h1>Select a Concert</h1>
+    <ul class="concert-list" id="concertList"></ul>
+</div>
+
+<div id="bookingContainer" class="container" style="display: none;">
+    <h1>🎶 Select Your Concert Seats</h1>
+    <div class="seat-container" id="seatContainer"></div>
+    <button id="proceedBtn" class="btn" onclick="proceedToPayment()" style="display:none;">Proceed to Payment</button>
+</div>
+
+<div id="paymentContainer" class="payment-container" style="display: none;">
+    <h2>Select Payment Method</h2>
+    <button class="btn" onclick="completePayment('PhonePe')"> PhonePe </button>
+    <button class="btn" onclick="completePayment('GPay')"> GPay </button>
+    <button class="btn" onclick="completePayment('Paytm')"> Paytm </button>
+</div>
+
+<div id="successContainer" class="payment-container" style="display: none;">
+    <h2>✅ Payment Successful</h2>
+    <p>Thank you for booking your concert seat!</p>
+</div>
+
+<script>
+    const concerts = [
+        { name: "Taylor Swift - The Eras Tour", price: "$120" },
+        { name: "The Weeknd - After Hours", price: "$100" },
+        { name: "Coldplay - Music of the Spheres", price: "$150" }
+    ];
+    
+    function showConcerts() {
+        const concertList = document.getElementById("concertList");
+        concertList.innerHTML = "";
+        concerts.forEach((concert, index) => {
+            const li = document.createElement("li");
+            li.classList.add("concert-item");
+            li.textContent = `${concert.name} - ${concert.price}`;
+            li.onclick = () => selectConcert();
+            concertList.appendChild(li);
+        });
+    }
+
+    function selectConcert() {
+        document.getElementById("concertsContainer").style.display = "none";
+        document.getElementById("bookingContainer").style.display = "block";
+        generateSeats();
+    }
+
+    function generateSeats() {
+        let seatContainer = document.getElementById("seatContainer");
+        seatContainer.innerHTML = "";
+        for (let i = 1; i <= 36; i++) {
+            const seat = document.createElement("div");
+            seat.classList.add("seat");
+            seat.textContent = i;
+            seat.onclick = () => selectSeat(seat, i);
+            seatContainer.appendChild(seat);
+        }
+    }
+
+    function selectSeat(seat, seatNumber) {
+        seat.classList.toggle("selected");
+        document.getElementById("proceedBtn").style.display = "block";
+    }
+
+    function proceedToPayment() {
+        document.getElementById("bookingContainer").style.display = "none";
+        document.getElementById("paymentContainer").style.display = "block";
+    }
+
+    function completePayment(method) {
+        alert("Payment Successful via " + method);
+        document.getElementById("paymentContainer").style.display = "none";
+        document.getElementById("successContainer").style.display = "block";
+    }
+    
+    showConcerts();
+</script>
+
+</body>
+</html>
